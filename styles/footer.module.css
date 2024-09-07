@@ -1,0 +1,114 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem;
+    background-color: #DAAF42;
+    color: #262525;
+  }
+  
+  .logoContainer {
+    /* flex: 1; */
+    display: flex;
+    justify-content: center;
+    background-color: antiquewhite;
+    width: 200px;  
+    height: 200px;
+    border-radius: 50%;  
+    overflow: hidden;  
+  }
+  
+  
+  .contactForm {
+    flex: 2;
+    padding: 0 2rem;
+  }
+  
+  .contactForm h2 {
+    color: #262525;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #262525;
+  }
+  
+  .formGroup input, .formGroup textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #262525;
+    background-color: #fff;
+    color: #262525;
+  }
+  
+  .formGroup textarea {
+    height: 100px;
+  }
+  
+  .button {
+    background-color: #262525;
+    color: #262525;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #fff;
+  }
+  
+  .usefulLinks {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .usefulLinks h2 {
+    color: #262525;
+  }
+  
+  .usefulLinks ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .usefulLinks li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .usefulLinks li a {
+    color: #262525;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .usefulLinks li a:hover {
+    color: #fff;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .footer {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .logoContainer, .contactForm, .usefulLinks {
+      width: 100%;
+      border-radius: 50%;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  
+    .contactForm {
+      padding: 0;
+    }
+  }
+  
