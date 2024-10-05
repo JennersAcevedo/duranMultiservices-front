@@ -3,7 +3,7 @@
     width: 21vw;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.904);
+    box-shadow: 0 4px 8px rgba(224, 174, 9, 0.904);
     transition: transform 0.3s ease;
     background-color: #DAAF42; 
   }

@@ -25,16 +25,16 @@ export default function Navbar ()  {
           <Link href="/">Inicio</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/servicios">Servicios</Link>
+          <Link href="/services">Servicios</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/clientes">Clientes</Link>
+          <Link href="/clients">Clientes</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/contacto">Contáctanos</Link>
+          <Link href="/contact">Contáctanos</Link>
         </li>
         <li className={styles.appointment}>
-          <Link href="/cita">Hacer una Cita</Link>
+          <Link href="/appointment">Hacer una Cita</Link>
         </li>
       </ul>
     </nav>
