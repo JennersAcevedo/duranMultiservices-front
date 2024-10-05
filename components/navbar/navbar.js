@@ -27,9 +27,9 @@ export default function Navbar ()  {
         <li className={styles.navItem}>
           <Link href="/services">Servicios</Link>
         </li>
-        <li className={styles.navItem}>
+        {/* <li className={styles.navItem}>
           <Link href="/clients">Clientes</Link>
-        </li>
+        </li> */}
         <li className={styles.navItem}>
           <Link href="/contact">Contáctanos</Link>
         </li>

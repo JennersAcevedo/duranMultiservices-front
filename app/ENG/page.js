@@ -1,14 +1,14 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Navbar from "@/components/navbar/navbar";
-import banner from "../assets/banner.webp";
+import banner from "../../assets/banner.webp";
 import Title from "@/components/titles/title";
 import HomeServiceCard from "@/components/card/HomeServiceCard";
 import Footer from "@/components/footer/footer";
-import woman  from "../assets/woman.webp";
-import document from "../assets/document.webp";
-import divorce from "../assets/divorce.webp";
-import american from "../assets/american-flag.webp";
+import woman  from "../../assets/woman.webp";
+import document from "../../assets/document.webp";
+import divorce from "../../assets/divorce.webp";
+import american from "../../assets/american-flag.webp";
 
 export default function Home() {
   return (
@@ -58,7 +58,22 @@ export default function Home() {
             title="Cartas Notarizadas"
             description="Notarizamos tus cartas"
           />
-          
+           {/*
+          <HomeServiceCard
+            imageSrc="https://via.placeholder.com/300x200"
+            title="Card 7"
+            description="This is the descriptive text for card 7."
+          />
+          <HomeServiceCard
+            imageSrc="https://via.placeholder.com/300x200"
+            title="Card 8"
+            description="This is the descriptive text for card 8."
+          />
+          <HomeServiceCard
+            imageSrc="https://via.placeholder.com/300x200"
+            title="Card 9"
+            description="This is the descriptive text for card 9."
+          /> */}
         </div>
       </main>
       <footer className={styles.footer}>
