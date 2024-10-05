@@ -5,6 +5,10 @@ import banner from "../assets/banner.webp";
 import Title from "@/components/titles/title";
 import HomeServiceCard from "@/components/card/HomeServiceCard";
 import Footer from "@/components/footer/footer";
+import woman  from "../assets/woman.webp";
+import document from "../assets/document.webp";
+import divorce from "../assets/divorce.webp";
+import american from "../assets/american-flag.webp";
 
 export default function Home() {
   return (
@@ -25,35 +29,36 @@ export default function Home() {
         <Title title="Nuestros servicios" />
         <div className={styles.services}>
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={woman}
             title="Preparacion de Impuestos"
             description="This is the descriptive text for card 1."
           />
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={document}
             title="Traduccion de documentos"
-            description="This is the descriptive text for card 2."
+            description="Traducimos tus documentos al instante"
           />
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={divorce}
             title="Aplicacion de divorcio"
-            description="This is the descriptive text for card 3."
+            description="Hacemos la aplicacion para divorcio"
           />
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={american}
             title="Solicitud de Ciudadania Americana"
-            description="This is the descriptive text for card 4."
+            description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
           />
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={document}
             title="Asesoria Migratoria"
-            description="This is the descriptive text for card 5."
+            description="Te asesoramos en tus procesos migratorios"
           />
           <HomeServiceCard
-            imageSrc="https://via.placeholder.com/300x200"
+            imageSrc={document}
             title="Cartas Notarizadas"
-            description="This is the descriptive text for card 6."
+            description="Notarizamos tus cartas"
           />
+           {/*
           <HomeServiceCard
             imageSrc="https://via.placeholder.com/300x200"
             title="Card 7"
@@ -68,11 +73,11 @@ export default function Home() {
             imageSrc="https://via.placeholder.com/300x200"
             title="Card 9"
             description="This is the descriptive text for card 9."
-          />
+          /> */}
         </div>
       </main>
       <footer className={styles.footer}>
-        <Footer/>
+        <Footer />
       </footer>
     </div>
   );

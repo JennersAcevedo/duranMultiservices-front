@@ -1,95 +1,88 @@
+'use client'
 import Image from "next/image";
-import styles from "./page.module.css";
+import styles from "@/styles/services.module.css";
+import Navbar from "@/components/navbar/navbar";
+import banner from "../../assets/banner.webp";
+import Title from "@/components/titles/title";
+import HomeServiceCard from "@/components/card/HomeServiceCard";
+import Footer from "@/components/footer/footer";
+import woman  from "../../assets/woman.webp";
+import document from "../../assets/document.webp";
+import divorce from "../../assets/divorce.webp";
+import american from "../../assets/american-flag.webp";
+import { InlineWidget } from "react-calendly";
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+    <Navbar />
+    <div className={styles.division}></div>
+    <main className={styles.main}>
+      <div className={styles.bannerContainer}>
         <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+          src={banner}
+          alt="Banner"
+          layout="fill"
+          objectFit="cover"
+          className={styles.bannerImage}
         />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </div>
+      <div className={styles.division}></div>
+      <Title title="Nuestros servicios" />
+      <div className={styles.services}>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <InlineWidget url="https://calendly.com/jenners-acevedo/cita-duran-multiservices" />
+        {/* <HomeServiceCard
+          imageSrc={woman}
+          title="Preparacion de Impuestos"
+          description="This is the descriptive text for card 1."
+        />
+        <HomeServiceCard
+          imageSrc={document}
+          title="Traduccion de documentos"
+          description="Traducimos tus documentos al instante"
+        />
+        <HomeServiceCard
+          imageSrc={divorce}
+          title="Aplicacion de divorcio"
+          description="Hacemos la aplicacion para divorcio"
+        />
+        <HomeServiceCard
+          imageSrc={american}
+          title="Solicitud de Ciudadania Americana"
+          description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
+        />
+        <HomeServiceCard
+          imageSrc={document}
+          title="Asesoria Migratoria"
+          description="Te asesoramos en tus procesos migratorios"
+        />
+        <HomeServiceCard
+          imageSrc={document}
+          title="Cartas Notarizadas"
+          description="Notarizamos tus cartas"
+        /> */}
+         {/*
+        <HomeServiceCard
+          imageSrc="https://via.placeholder.com/300x200"
+          title="Card 7"
+          description="This is the descriptive text for card 7."
+        />
+        <HomeServiceCard
+          imageSrc="https://via.placeholder.com/300x200"
+          title="Card 8"
+          description="This is the descriptive text for card 8."
+        />
+        <HomeServiceCard
+          imageSrc="https://via.placeholder.com/300x200"
+          title="Card 9"
+          description="This is the descriptive text for card 9."
+        /> */}
+      </div>
+    </main>
+    <footer className={styles.footer}>
+      <Footer />
+    </footer>
+  </div>
   );
 }
