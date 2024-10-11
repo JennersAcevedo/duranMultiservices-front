@@ -5,6 +5,8 @@ import Navbar from "@/components/navbar/navbar";
 
 import { useEffect, useState } from "react";
 import FooterContact from "@/components/footerContact/footer";
+import axios from "axios";
+import { DatePicker } from "@nextui-org/date-picker";
 
 export default function Appointment() {
   const [form, setForm] = useState({
@@ -21,28 +23,45 @@ export default function Appointment() {
   const [services, setServices] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [date, setDate] = useState([]);
 
   useEffect(() => {
-    // Obtener datos desde la API
     async function fetchData() {
       try {
-        const servicesResponse = await fetch(
-          "https://api.example.com/services"
-        );
-        const servicesData = await servicesResponse.json();
+        const servicesData = [
+          {
+            id: 1,
+            name: "service 1",
+          },
+        ];
         setServices(servicesData);
 
-        const datesResponse = await fetch(
-          "https://api.example.com/available-dates"
+        const datesResponse = await axios.get(
+          "http://localhost:4000/appointment/availability/45/dates/language/0"
         );
-        const datesData = await datesResponse.json();
+        const datesData = await datesResponse.data.data;
+        console.log(datesData);
         setAvailableDates(datesData);
-
-        const timesResponse = await fetch(
-          "https://api.example.com/available-times"
+        let today = new Date();
+        let urlDate =
+          today.getUTCMonth() +
+          "-" +
+          today.getUTCDate() +
+          "-" +
+          today.getUTCFullYear();
+        const timesResponse = await axios.get(
+          `http://localhost:4000/appointment/availability/45/date/${urlDate}`
         );
-        const timesData = await timesResponse.json();
-        setAvailableTimes(timesData);
+        console.log(new Date());
+        console.log(timesResponse);
+        const timesData = await timesResponse.data.data.availability;
+        let times = timesData.map(time =>({
+          "start":time['start'],
+          "end":time['end'],
+          "show":time['start']+' - '+time['end']
+        }))
+        setAvailableTimes(times);
       } catch (error) {
         console.error("Error fetching data from API:", error);
       }
@@ -52,12 +71,23 @@ export default function Appointment() {
   }, []);
 
   const handleChange = (e) => {
+    console.log(date);
     setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(date);
   };
-
+  const handleDateSelect = async (date) => {
+    setSelectedDate(date);
+    const timesResponse = await axios.get(
+      `http://localhost:4000/appointment/availability/45/date/${new Date()}`
+    );
+    console.log(new Date());
+    console.log(timesResponse);
+    const timesData = await timesResponse.data.data;
+    setAvailableTimes(timesData);
+    console.log("Fecha seleccionada:", date);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes añadir la lógica para enviar la cita
     console.log(form);
   };
 
@@ -123,38 +153,35 @@ export default function Appointment() {
           </select>
 
           <label htmlFor="date">Fecha</label>
-          <select
-            id="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona una fecha</option>
-            {availableDates.map((date) => (
-              <option key={date} value={date}>
-                {date}
-              </option>
-            ))}
-          </select>
+          <div className={styles.appointmentScheduler}>
+            <div className={styles.datesContainer}>
+              {availableDates.map((date, index) => (
+                <button
+                  key={index}
+                  className={styles.dateButton}
+               
+                  onClick={() => handleDateSelect(date)}
+                >
+                  {date}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <label htmlFor="time">Hora</label>
-          <select
-            id="time"
-            name="time"
-            value={form.time}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona una hora</option>
-            {availableTimes
-              .filter((time) => time.date === form.date)
-              .map((time) => (
-                <option key={time.value} value={time.value}>
-                  {time.label}
-                </option>
+          <div className={styles.appointmentScheduler}>
+            <div className={styles.datesContainer}>
+              {availableTimes.map((start, index) => (
+                <button
+                  key={index}
+                  className={styles.dateButton}
+                  onClick={() => handleDateSelect(start['start'])}
+                >
+                  {start['show']}
+                </button>
               ))}
-          </select>
+            </div>
+          </div>
 
           <label htmlFor="mode">Modalidad</label>
           <select
@@ -184,7 +211,7 @@ export default function Appointment() {
           </button>
         </form>
       </div>
-      <FooterContact/>
+      <FooterContact />
     </div>
   );
 }
