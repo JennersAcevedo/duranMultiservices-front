@@ -5,13 +5,12 @@ import Image from 'next/image';
 import styles from "@/styles/navbar.module.css";
 import logo from "../../assets/logo.webp"
 
-export default function Navbar ()  {
+export default function UserNavBar ()  {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
 
   return (
     <nav className={styles.navbar}>

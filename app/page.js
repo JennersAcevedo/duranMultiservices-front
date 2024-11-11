@@ -5,12 +5,14 @@ import banner from "../assets/banner.webp";
 import Title from "@/components/titles/title";
 import HomeServiceCard from "@/components/card/HomeServiceCard";
 import Footer from "@/components/footer/footer";
-import woman  from "../assets/woman.webp";
+import woman from "../assets/woman.webp";
 import document from "../assets/document.webp";
 import divorce from "../assets/divorce.webp";
 import american from "../assets/american-flag.webp";
+import Link from 'next/link';
 
 export default function Home() {
+  
   return (
     <div className={styles.page}>
       <Navbar />
@@ -28,11 +30,13 @@ export default function Home() {
         <div className={styles.division}></div>
         <Title title="Nuestros servicios" />
         <div className={styles.services}>
+          <Link href='/services/translation'>
           <HomeServiceCard
             imageSrc={woman}
             title="Preparacion de Impuestos"
             description="This is the descriptive text for card 1."
           />
+          </Link>
           <HomeServiceCard
             imageSrc={document}
             title="Traduccion de documentos"
@@ -58,7 +62,6 @@ export default function Home() {
             title="Cartas Notarizadas"
             description="Notarizamos tus cartas"
           />
-          
         </div>
       </main>
       <footer className={styles.footer}>

@@ -1,144 +1,82 @@
-import Image from "next/image";
-import styles from "@/styles/services.module.css";
+"use client";
+import styles from "@/styles/login.module.css";
 import Navbar from "@/components/navbar/navbar";
-import banner from "../../assets/banner.webp";
-import Title from "@/components/titles/title";
-import HomeServiceCard from "@/components/card/HomeServiceCard";
-import Footer from "@/components/footer/footer";
-import woman  from "../../assets/woman.webp";
-import document from "../../assets/document.webp";
-import divorce from "../../assets/divorce.webp";
-import american from "../../assets/american-flag.webp";
+import { useState } from "react";
+import GuessNavBar from "@/components/GuessNavbar/guessNavBar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
-export default function Services() {
+export default function Login() {
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleRememberMeChange = () => {
+    setRememberMe(!rememberMe);
+  };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Formulario enviado:", form, "Recordarme:", rememberMe);
+  };
+
   return (
-      <div className={styles.page}>
-        <Navbar />
-        <div className={styles.division}></div>
-        <main className={styles.main}>
-          <div className={styles.bannerContainer}>
-            <Image
-              src={banner}
-              alt="Banner"
-              layout="fill"
-              objectFit="cover"
-              className={styles.bannerImage}
+    <div>
+      <Navbar/>
+    <div className={styles.body}>
+      <div className={styles.logincontainer}>
+        <div className={styles.loginwelcome}>
+          <h1>Welcome Back!</h1>
+        </div>
+        <div className={styles.loginform}>
+          <h2>Login</h2>
+          <p>Welcome back! Please login to your account.</p>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="username">User Name</label>
+            <input
+              type="email"
+              id="username"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              required
+              className={styles.input}
             />
-          </div>
-          <div className={styles.division}></div>
-          <Title title="Servicios" />
-          <div className={styles.services}>
-            <HomeServiceCard
-              imageSrc={woman}
-              title="Preparacion de Impuestos"
-              description="This is the descriptive text for card 1."
+
+            <label htmlFor="password">Password</label>
+            <div className={styles.passwordWrapper}>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className={`${styles.input} ${styles.passwordInput}`}
             />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Traduccion de documentos"
-              description="Traducimos tus documentos al instante"
-            />
-            <HomeServiceCard
-              imageSrc={divorce}
-              title="Aplicacion de divorcio"
-              description="Hacemos la aplicacion para divorcio"
-            />
-            <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-              <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-              <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-              <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-              <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-              <HomeServiceCard
-              imageSrc={american}
-              title="Solicitud de Ciudadania Americana"
-              description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Asesoria Migratoria"
-              description="Te asesoramos en tus procesos migratorios"
-            />
-            <HomeServiceCard
-              imageSrc={document}
-              title="Cartas Notarizadas"
-              description="Notarizamos tus cartas"
-            />
-  
-          </div>
-        </main>
-        <footer className={styles.footer}>
-          <Footer />
-        </footer>
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className={styles.toggleButton}
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </button>
+            </div>
+            <button type="submit" className={styles.loginbutton}>
+              Login
+            </button>
+          </form>
+        
+        </div>
       </div>
+    </div>
+    </div>
   );
 }

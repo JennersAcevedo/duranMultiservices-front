@@ -14,7 +14,6 @@ const HomeServiceCard = ({ imageSrc, title, description }) => {
             objectFit="cover"
             className={styles.bannerImage}
           />
-        {/* <img src={imageSrc} alt={title} className={styles.image} /> */}
         <div className={styles.overlay}>
           <p className={styles.description}>{description}</p>
         </div>
