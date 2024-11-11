@@ -5,13 +5,12 @@ import Image from 'next/image';
 import styles from "@/styles/navbar.module.css";
 import logo from "../../assets/logo.webp"
 
-export default function Navbar ()  {
+export default function GuessNavBar ()  {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
 
   return (
     <nav className={styles.navbar}>
@@ -38,7 +37,7 @@ export default function Navbar ()  {
           <Link href="/appointment">Hacer una Cita</Link>
         </li>
         <li className={styles.navItem}>
-          <Link href="/login">Login</Link>
+          <Link href="/login">registar</Link>
         </li>
       </ul>
     </nav>
