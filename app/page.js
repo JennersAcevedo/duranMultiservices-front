@@ -9,6 +9,8 @@ import woman from "../assets/woman.webp";
 import document from "../assets/document.webp";
 import divorce from "../assets/divorce.webp";
 import american from "../assets/american-flag.webp";
+import inmigrant from "../assets/Inmigrantes.webp";
+import sign from "../assets/sign.webp";
 import Link from 'next/link';
 
 export default function Home() {
@@ -53,12 +55,12 @@ export default function Home() {
             description="Te ayudamos a conseguir la tan anhelada ciudadania Americana"
           />
           <HomeServiceCard
-            imageSrc={document}
+            imageSrc={inmigrant}
             title="Asesoria Migratoria"
             description="Te asesoramos en tus procesos migratorios"
           />
           <HomeServiceCard
-            imageSrc={document}
+            imageSrc={sign}
             title="Cartas Notarizadas"
             description="Notarizamos tus cartas"
           />

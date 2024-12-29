@@ -23,6 +23,12 @@ export default function Services() {
     { id: 1, name: "Tardía" },
     { id: 2, name: "Oportuna" },
   ];
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    console.log('values: ', value)
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
 
   const [form, setForm] = useState({
     service: "",
