@@ -6,10 +6,12 @@ import banner from "../../../assets/banner.webp";
 import Title from "@/components/titles/title";
 import Footer from "@/components/footer/footer";
 import { useState } from "react";
+import GuessNavBar from "@/components/GuessNavbar/guessNavBar";
+import axios from "axios";
 
 export default function Services() {
   const services = [
-    { id: 1, name: "Acta de Nacimiento" },
+    { id: 1, name: "Acta de Nacimiento (Dominicana)" },
     { id: 2, name: "Acta de Matrimonio" },
     { id: 3, name: "Acta de Defuncion" },
   ];
@@ -25,51 +27,129 @@ export default function Services() {
   ];
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
-    console.log('values: ', value)
+    console.log("values: ", value);
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
 
   const [form, setForm] = useState({
-    service: "",
-    registration_date: "",
-    birth_date: "",
-    sex: "",
-    circunscription: "",
+    name: "",
     barcode: "",
-    firstName: "",
-    lastName: "",
-    registration_no: "",
-    folio: "",
-    act: "",
-    year: "",
+    event: "",
+    circunscription: "",
+    circunscription_city: "",
+    registration_date: "",
+    book_no: "",
     declaration_type: "",
-    eventNumber: "",
+    folio_no: "",
+    act_no: "",
+    year: "",
+    id: "",
+    sex: "",
+    birth_place: "",
+    birth_city: "",
+    birth_date: "",
     father: {
-      firstName: "",
-      lastName: "",
-      registration_no: "",
+      name: "",
+      nationality: "",
+      id: "",
     },
     mother: {
-      firstName: "",
-      lastName: "",
-      registration_no: "",
+      name: "",
+      nationality: "",
+      id: "",
     },
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+  
+    // Manejar campos anidados
+    const keys = name.split("."); // Divide "father.name" en ["father", "name"]
+  
+    if (keys.length > 1) {
+      // Si es un campo anidado, crea una copia del objeto anidado y actualiza el campo
+      setForm((prevForm) => ({
+        ...prevForm,
+        [keys[0]]: {
+          ...prevForm[keys[0]],
+          [keys[1]]: value,
+        },
+      }));
+    } else {
+      // Si no es anidado, actualiza normalmente
+      setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    }
   };
 
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); 
+  const sendTranslationInfo = async (form)=>{
+    let token= getCookie("authToken")
+    let url = `http://localhost:4000/translation/new/birth`
+    let config={
+      headers: {
+        "Authorization": `Bearer ${token}`, // Incluye el token como Bearer
+        "Content-Type": "application/json",
+      }
+    }
+    let body={
+      "barcode":form['barcode'],
+      "event":form['event'],
+      "circumscription":form['circunscription'],
+      "circumscription_city":form['circunscription_city'],
+      "registration_date":form['registration_date'],
+      "book_no":form['book_no'],
+      "declaration_type":form['declaration_type'],
+      "folio_no":form['folio_no'],
+      "act_no":form['act_no'],
+      "year":form['year'],
+      "name":form['name'],
+      "identity_number":form['id'],
+      "sex":form['sex'],
+      "birth_place":form['birth_place'],
+      "birth_city":form['birth_city'],
+      "birth_date":form['birth_date'],
+      "father_name":form['father']['name'],
+      "father_nationality":form['father']['nationality'],
+      "father_identity":form['father']['id'],
+      "mother_name":form['mother']['name'],
+      "mother_nationality":form['mother']['nationality'],
+      "mother_identity":form['mother']['id']
+    }
+    
+    const formResponse = await axios.post(url, body,  config)
+    return formResponse
+  }
+  const downloadPdf = (base64String, fileName) => {
+    // Convierte el Base64 a un Blob
+    const byteCharacters = atob(base64String);
+    const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+  
+    // Crea un enlace temporal para la descarga
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName; // Nombre del archivo que el usuario verá
+    document.body.appendChild(link);
+    link.click();
+  
+    // Limpia el enlace temporal
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let formResponse = await sendTranslationInfo(form)
+    if(formResponse && formResponse.data.success){
+      downloadPdf(formResponse.data.data, "document.pdf");
+    }
     console.log("Formulario enviado", form);
   };
 
   return (
     <div className={styles.page}>
-      <Navbar />
+      <GuessNavBar />
       <div className={styles.division}></div>
       <main className={styles.main}>
         <div className={styles.bannerContainer}>
@@ -98,58 +178,36 @@ export default function Services() {
               </option>
             ))}
           </select>
-          {form.service === "Acta de Nacimiento" && (
+          {form.service === "Acta de Nacimiento (Dominicana)" && (
             <div className={styles.container}>
-              <h1 className={styles.title}>
-                Traducción de Acta de Nacimiento
-              </h1>
+              <h1 className={styles.title}>Traducción de Acta de Nacimiento</h1>
               <form className={styles.form} onSubmit={handleSubmit}>
-                <label htmlFor="firstName">Nombre de titular</label>
+                <label htmlFor="name">Nombre de titular</label>
                 <input
                   type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={form.firstName}
+                  id="name"
+                  name="name"
+                  value={form.name}
                   onChange={handleChange}
                   required
                 />
 
-                <label htmlFor="lastName">Apellido de titular</label>
+                <label htmlFor="barcode">Codigo de barra</label>
                 <input
                   type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={form.lastName}
+                  id="barcode"
+                  name="barcode"
+                  value={form.barcode}
                   onChange={handleChange}
                   required
                 />
 
-                <label htmlFor="registration_no">Número de registro</label>
+                <label htmlFor="eventNumber">Número de Evento</label>
                 <input
                   type="text"
-                  id="registration_no"
-                  name="registration_no"
-                  value={form.registration_no}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="registration_date">Fecha de registro</label>
-                <input
-                  type="text"
-                  id="registration_date"
-                  name="registration_date"
-                  value={form.registration_date}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="birth_date">Fecha de Nacimiento</label>
-                <input
-                  type="text"
-                  id="birth_date"
-                  name="birth_date"
-                  value={form.birth_date}
+                  id="eventNumber"
+                  name="eventNumber"
+                  value={form.eventNumber}
                   onChange={handleChange}
                   required
                 />
@@ -164,49 +222,38 @@ export default function Services() {
                   required
                 />
 
-                <label htmlFor="barcode">Código de Barra</label>
-                <input
-                  type="text"
-                  id="barcode"
-                  name="barcode"
-                  value={form.barcode}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="folio">Folio</label>
-                <input
-                  type="text"
-                  id="folio"
-                  name="folio"
-                  value={form.folio}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="act">Acta</label>
-                <input
-                  type="text"
-                  id="act"
-                  name="act"
-                  value={form.act}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="year">Año</label>
-                <input
-                  type="text"
-                  id="year"
-                  name="year"
-                  value={form.year}
-                  onChange={handleChange}
-                  required
-                />
-
-                <label htmlFor="declaration_type">
-                  Tipo de Declaración
+                <label htmlFor="circunscription_city">
+                  Ciudad de Circunscripción
                 </label>
+                <input
+                  type="text"
+                  id="circunscription_city"
+                  name="circunscription_city"
+                  value={form.circunscription_city}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="registration_date">Fecha de registro</label>
+                <input
+                  type="text"
+                  id="registration_date"
+                  name="registration_date"
+                  value={form.registration_date}
+                  onChange={handleChange}
+                  required
+                />
+                <label htmlFor="book_no">Número de libro</label>
+                <input
+                  type="text"
+                  id="book_no"
+                  name="book_no"
+                  value={form.book_no}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="declaration_type">Tipo de Declaración</label>
                 <select
                   id="declaration_type"
                   name="declaration_type"
@@ -222,12 +269,42 @@ export default function Services() {
                   ))}
                 </select>
 
-                <label htmlFor="eventNumber">Número de Evento</label>
+                <label htmlFor="folio_no">Folio</label>
                 <input
                   type="text"
-                  id="eventNumber"
-                  name="eventNumber"
-                  value={form.eventNumber}
+                  id="folio_no"
+                  name="folio_no"
+                  value={form.folio_no}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="act_no">Acta</label>
+                <input
+                  type="text"
+                  id="act_no"
+                  name="act_no"
+                  value={form.act_no}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="year">Año</label>
+                <input
+                  type="text"
+                  id="year"
+                  name="year"
+                  value={form.year}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="id">Numero de Cedula</label>
+                <input
+                  type="text"
+                  id="id"
+                  name="id"
+                  value={form.id}
                   onChange={handleChange}
                   required
                 />
@@ -248,37 +325,67 @@ export default function Services() {
                   ))}
                 </select>
 
-                {/* Información de los padres */}
-
-                <h2>Información del Padre</h2>
-                <label htmlFor="fatherFirstName">Nombre del Padre</label>
+                <label htmlFor="birth_place">Lugar de Nacimiento</label>
                 <input
                   type="text"
-                  id="fatherFirstName"
-                  name="father.firstName"
-                  value={form.father.firstName}
+                  id="birth_place"
+                  name="birth_place"
+                  value={form.birth_place}
                   onChange={handleChange}
                   required
                 />
 
-                <label htmlFor="fatherLastName">Apellido del Padre</label>
+                <label htmlFor="birth_date">Ciudad de Nacimiento</label>
                 <input
                   type="text"
-                  id="fatherLastName"
-                  name="father.lastName"
-                  value={form.father.lastName}
+                  id="birth_city"
+                  name="birth_city"
+                  value={form.birth_city}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="birth_date">Fecha de Nacimiento</label>
+                <input
+                  type="text"
+                  id="birth_date"
+                  name="birth_date"
+                  value={form.birth_date}
+                  onChange={handleChange}
+                  required
+                />
+
+                {/* Información de los padres */}
+
+                <h2>Información del Padre</h2>
+                <label htmlFor="father.name">Nombre del Padre</label>
+                <input
+                  type="text"
+                  id="father.name"
+                  name="father.name"
+                  value={form.father.name}
+                  onChange={handleChange}
+                  required
+                />
+
+                <label htmlFor="fatherNationality">Nacionalidad del Padre</label>
+                <input
+                  type="text"
+                  id="fatherNationality"
+                  name="father.nationality"
+                  value={form.father.nationality}
                   onChange={handleChange}
                   required
                 />
 
                 <label htmlFor="fatherRegistrationNo">
-                  Número de registro del Padre
+                  Número de cedula del Padre
                 </label>
                 <input
                   type="text"
                   id="fatherRegistrationNo"
-                  name="father.registration_no"
-                  value={form.father.registration_no}
+                  name="father.id"
+                  value={form.father.id}
                   onChange={handleChange}
                   required
                 />
@@ -288,18 +395,18 @@ export default function Services() {
                 <input
                   type="text"
                   id="motherFirstName"
-                  name="mother.firstName"
-                  value={form.mother.firstName}
+                  name="mother.name"
+                  value={form.mother.name}
                   onChange={handleChange}
                   required
                 />
 
-                <label htmlFor="motherLastName">Apellido de la Madre</label>
+                <label htmlFor="motherNationality">Nacionalidad de la Madre</label>
                 <input
                   type="text"
-                  id="motherLastName"
-                  name="mother.lastName"
-                  value={form.mother.lastName}
+                  id="motherNationality"
+                  name="mother.nationality"
+                  value={form.mother.nationality}
                   onChange={handleChange}
                   required
                 />
@@ -310,8 +417,8 @@ export default function Services() {
                 <input
                   type="text"
                   id="motherRegistrationNo"
-                  name="mother.registration_no"
-                  value={form.mother.registration_no}
+                  name="mother.id"
+                  value={form.mother.id}
                   onChange={handleChange}
                   required
                 />

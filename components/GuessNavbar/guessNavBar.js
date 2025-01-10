@@ -33,12 +33,15 @@ export default function GuessNavBar ()  {
         <li className={styles.navItem}>
           <Link href="/contact">Contáctanos</Link>
         </li>
+        <li className={styles.navItem}>
+          <Link href="/download">Descargas</Link>
+        </li>
         <li className={styles.appointment}>
           <Link href="/appointment">Hacer una Cita</Link>
         </li>
-        <li className={styles.navItem}>
+        {/* <li className={styles.navItem}>
           <Link href="/login">registar</Link>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );
