@@ -7,8 +7,9 @@ import banner from "../../assets/banner.webp";
 import Title from "@/components/titles/title";
 import Footer from "@/components/footer/footer";
 import document from "../../assets/document.webp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GuessNavBar from '@/components/GuessNavbar/guessNavBar';
+import { useRouter } from 'next/navigation';
 
 export default function DownloadPage() {
   const downloadDocument = async () => {
@@ -36,6 +37,21 @@ export default function DownloadPage() {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
+  const router = useRouter();
+ useEffect(() => {
+  async function tokenValidation() {
+    let token = getCookie("authToken");
+        console.log(token)
+       
+        if (!token) {
+          console.log('no hay token')
+          router.push("/login");
+        }else{
+          console.log('hay token')
+        }
+  }
+  tokenValidation();
+}, []);
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
