@@ -115,7 +115,7 @@
     background-color: #b8933b; 
   }
   
-  .dateButton.selected {
+  .selected {
     background-color: #262525; 
     color: #DAAF42; 
     border: 2px solid #DAAF42;

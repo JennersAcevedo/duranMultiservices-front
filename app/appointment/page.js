@@ -7,25 +7,36 @@ import { useEffect, useState } from "react";
 import FooterContact from "@/components/footerContact/footer";
 import axios from "axios";
 import { DatePicker } from "@nextui-org/date-picker";
+import { useRouter } from "next/navigation";
 
 export default function Appointment() {
   const [form, setForm] = useState({
     service: "",
     date: "",
     time: "",
+    end: "",
     mode: "",
     email: "",
     phone: "",
     firstName: "",
     lastName: "",
     referenceNumber: "",
+    duration: "",
   });
   const [services, setServices] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
+  const [auxiliarDates, setAuxiliarDates] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
   const [date, setDate] = useState([]);
-
+  const router = useRouter();
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    console.log("values: ", value);
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
   useEffect(() => {
     async function fetchData() {
       try {
@@ -36,31 +47,50 @@ export default function Appointment() {
           },
         ];
         setServices(servicesData);
-
+        let token = getCookie("authToken");
+        console.log(token)
+       
+        if (!token) {
+          console.log('no hay token')
+          router.push("/login");
+        }else{
+          console.log('hay token')
+        }
+        let config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        };
         const datesResponse = await axios.get(
-          "http://localhost:4000/appointment/availability/45/dates/language/0"
+          "http://localhost:4000/appointment/availability/45/dates/language/0",
+          config
         );
         const datesData = await datesResponse.data.data;
         console.log(datesData);
-        setAvailableDates(datesData);
+        setAvailableDates(datesData.dates);
+        setAuxiliarDates(datesData.datesAbr);
         let today = new Date();
         let urlDate =
           today.getUTCMonth() +
+          1 +
           "-" +
           today.getUTCDate() +
           "-" +
           today.getUTCFullYear();
         const timesResponse = await axios.get(
-          `http://localhost:4000/appointment/availability/45/date/${urlDate}`
+          `http://localhost:4000/appointment/availability/45/date/${urlDate}`,
+          config
         );
         console.log(new Date());
-        console.log(timesResponse);
+        console.log("times:", timesResponse);
         const timesData = await timesResponse.data.data.availability;
-        let times = timesData.map(time =>({
-          "start":time['start'],
-          "end":time['end'],
-          "show":time['start']+' - '+time['end']
-        }))
+        let times = timesData.map((time) => ({
+          start: time["start"],
+          end: time["end"],
+          show: time["start"] + " - " + time["end"],
+        }));
+
         setAvailableTimes(times);
       } catch (error) {
         console.error("Error fetching data from API:", error);
@@ -75,20 +105,61 @@ export default function Appointment() {
     setForm({ ...form, [e.target.name]: e.target.value });
     console.log(date);
   };
-  const handleDateSelect = async (date) => {
-    setSelectedDate(date);
-    const timesResponse = await axios.get(
-      `http://localhost:4000/appointment/availability/45/date/${new Date()}`
-    );
-    console.log(new Date());
-    console.log(timesResponse);
-    const timesData = await timesResponse.data.data;
-    setAvailableTimes(timesData);
-    console.log("Fecha seleccionada:", date);
+  const handleDateSelect = async (date, index) => {
+    if (form["duration"] === "") {
+      setSelectedDate(date);
+      console.log(auxiliarDates[index]);
+      let token = getCookie("authToken");
+      let config = {
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluye el token como Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      const timesResponse = await axios.get(
+        `http://localhost:4000/appointment/availability/45/date/${auxiliarDates[index]}`,
+        config
+      );
+      console.log(new Date());
+      console.log(timesResponse);
+      const timesData = await timesResponse.data.data.availability;
+      setForm({ ...form, date: date });
+      setAvailableTimes(timesData);
+      console.log("Fecha seleccionada:", date);
+    } else {
+    }
   };
-  const handleSubmit = (e) => {
+  const handleTimeSelect = async (time, index) => {
+    setSelectedTime(time);
+    setForm({ ...form, time: time });
+    console.log(time);
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    if (form["duration"] === ""|| form['service']==="") {
+      let body = {
+        title: form["service"] + " - " + form["referenceNumber"],
+        start: form["time"],
+        end: form["end"],
+        date: form["date"],
+        mode: form["mode"],
+        reference: form["referenceNumber"],
+      };
+      let token = getCookie("authToken");
+      let config = {
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluye el token como Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      let appointmentResponse = await axios.post(
+        "http://localhost:4000/appointment/add",
+        body,
+        config
+      );
+      console.log(appointmentResponse);
+      console.log(form);
+    }
   };
 
   return (
@@ -117,6 +188,16 @@ export default function Appointment() {
             onChange={handleChange}
             required
           />
+          <div style={{  position: 'absolute', left: "-9999px"  }}>
+            <label htmlFor="duration">Duration:</label>
+            <input
+              type="text"
+              id="duration"
+              name="duration"
+              value={form.duration}
+              onChange={handleChange}
+            />
+          </div>
 
           <label htmlFor="email">Correo Electrónico</label>
           <input
@@ -142,7 +223,7 @@ export default function Appointment() {
             name="service"
             value={form.service}
             onChange={handleChange}
-            required
+            
           >
             <option value="">Selecciona un servicio</option>
             {services.map((service) => (
@@ -158,9 +239,10 @@ export default function Appointment() {
               {availableDates.map((date, index) => (
                 <button
                   key={index}
-                  className={styles.dateButton}
-               
-                  onClick={() => handleDateSelect(date)}
+                  className={`${styles.dateButton} ${
+                    selectedDate === date ? styles.selected : ""
+                  }`}
+                  onClick={() => handleDateSelect(date, index)}
                 >
                   {date}
                 </button>
@@ -171,13 +253,16 @@ export default function Appointment() {
           <label htmlFor="time">Hora</label>
           <div className={styles.appointmentScheduler}>
             <div className={styles.datesContainer}>
-              {availableTimes.map((start, index) => (
+              {availableTimes.map((time, index) => (
                 <button
                   key={index}
-                  className={styles.dateButton}
-                  onClick={() => handleDateSelect(start['start'])}
+                  className={`${styles.dateButton} ${
+                    selectedTime === time["start"] ? styles.selected : ""
+                  }`}
+                  name="time"
+                  onClick={() => handleTimeSelect(time["start"], index)}
                 >
-                  {start['show']}
+                  {time["start"] + " - " + time["end"]}
                 </button>
               ))}
             </div>

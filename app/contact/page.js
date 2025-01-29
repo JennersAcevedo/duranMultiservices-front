@@ -10,6 +10,7 @@ export default function Contact() {
     name: '',
     email: '',
     message: '',
+    phone:'809'
   });
 
   const handleChange = (e) => {
@@ -18,8 +19,10 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //Agregar llamada al BackEnd para enviar el email
+    if (form['phone']==='809'|| form['email']==='') {
+        //Agregar llamada al BackEnd para enviar el email
     console.log(form);
+    }
   };
 
   return (
@@ -57,8 +60,17 @@ export default function Contact() {
             name="email"
             value={form.email}
             onChange={handleChange}
-            required
           />
+           <div style={{ position: 'absolute', left: "120vw" }}>
+            <label htmlFor="phone">phone:</label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+            />
+          </div>
           <label htmlFor="message">Mensaje</label>
           <textarea
             id="message"

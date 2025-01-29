@@ -1,10 +1,13 @@
 "use client";
 import styles from "@/styles/admin.module.css";
 import Navbar from "@/components/navbar/navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import AdminNavbar from "@/components/AdminNavbar/adminNavbar";
+import { useRouter } from "next/navigation";
+
 
 export default function Admin() {
   const [form, setForm] = useState({
@@ -14,6 +17,7 @@ export default function Admin() {
     username: "",
     password: "",
     validate: "",
+    role: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,18 +37,32 @@ export default function Admin() {
   };
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
-    console.log("values: ", value);
+    console.log('values: ', value)
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
+const router = useRouter();
+useEffect(() => {
+ async function tokenValidation() {
+   let token = getCookie("authToken");
+       console.log(token)
+      
+       if (!token) {
+         console.log('no hay token')
+         router.push("/login");
+       }else{
+         console.log('hay token')
+       }
+ }
+ tokenValidation();
+}, []);
   const sendLoginInfo = async (
-   
     user,
     password,
     validate,
     name,
     email,
-    phone,
+    phone
   ) => {
     console.log("username: ", user);
     console.log("password: ", password);
@@ -58,16 +76,16 @@ export default function Admin() {
         customer_username: user,
         customer_email: email,
         customer_phone: phone,
-        customer_password: password
+        customer_password: password,
       };
-      console.log(body)
-      let config={
+      console.log(body);
+      let config = {
         headers: {
-          "Authorization": `Bearer ${token}`, // Incluye el token como Bearer
+          Authorization: `Bearer ${token}`, // Incluye el token como Bearer
           "Content-Type": "application/json",
-        }
-      }
-      const creationResponse = await axios.post(url, body,config );
+        },
+      };
+      const creationResponse = await axios.post(url, body, config);
       console.log(creationResponse.data);
     } else {
       alert("Password doesn't match");
@@ -84,20 +102,22 @@ export default function Admin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let login = await sendLoginInfo(
-      form.username,
-      form.password,
-      form.validate,
-      form.name,
-      form.email,
-      form.phone
-    );
-    console.log("Formulario enviado:", form, "Recordarme:", rememberMe);
+    if (form.role === "") {
+      let login = await sendLoginInfo(
+        form.username,
+        form.password,
+        form.validate,
+        form.name,
+        form.email,
+        form.phone
+      );
+      console.log("Formulario enviado:", form, "Recordarme:", rememberMe);
+    }
   };
 
   return (
     <div>
-      <Navbar />
+      <AdminNavbar />
       <div className={styles.body}>
         <div className={styles.logincontainer}>
           <div className={styles.loginwelcome}>
@@ -118,7 +138,17 @@ export default function Admin() {
                 required
                 className={styles.input}
               />
-              <label htmlFor="username">email</label>
+              <div style={{  position: 'absolute', left: "-9999px"  }}>
+                <label htmlFor="role">Role:</label>
+                <input
+                  type="text"
+                  id="role"
+                  name="role"
+                  value={form.role}
+                  onChange={handleChange}
+                />
+              </div>
+              <label htmlFor="email">email</label>
               <input
                 type="email"
                 id="email"
@@ -141,7 +171,7 @@ export default function Admin() {
               />
               <label htmlFor="username">User Name</label>
               <input
-                type="email"
+                type="text"
                 id="username"
                 name="username"
                 placeholder="Username"
