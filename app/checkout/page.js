@@ -9,19 +9,16 @@ import axios from "axios";
 import { DatePicker } from "@nextui-org/date-picker";
 import { useRouter } from "next/navigation";
 
-export default function Appointment() {
+export default function Checkout() {
   const [form, setForm] = useState({
-    service: "",
-    date: "",
-    time: "",
-    end: "",
-    mode: "",
     email: "",
     phone: "",
-    firstName: "",
-    lastName: "",
-    referenceNumber: "",
-    duration: "",
+    line1: "",
+    line2: "",
+    city: "",
+    state: "",
+    country: "",
+    zip: "",
   });
   const [services, setServices] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
@@ -48,11 +45,11 @@ export default function Appointment() {
         ];
         setServices(servicesData);
         let token = getCookie("authToken");
-        console.log(token)
-       
+        console.log(token);
+
         if (!token) {
           router.push("/login");
-        }else{
+        } else {
         }
         let config = {
           headers: {
@@ -99,14 +96,12 @@ export default function Appointment() {
   }, []);
 
   const handleChange = (e) => {
-
     setForm({ ...form, [e.target.name]: e.target.value });
-
   };
   const handleDateSelect = async (date, index) => {
     if (form["duration"] === "") {
       setSelectedDate(date);
- 
+
       let token = getCookie("authToken");
       let config = {
         headers: {
@@ -133,7 +128,7 @@ export default function Appointment() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form["duration"] === ""|| form['service']==="") {
+    if (form["duration"] === "" || form["service"] === "") {
       let body = {
         title: form["service"] + " - " + form["referenceNumber"],
         start: form["time"],
@@ -141,11 +136,12 @@ export default function Appointment() {
         date: form["date"],
         mode: form["mode"],
         reference: form["referenceNumber"],
+        status: 1,
       };
       let token = getCookie("authToken");
       let config = {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       };
@@ -157,7 +153,6 @@ export default function Appointment() {
       console.log(appointmentResponse);
       console.log(form);
       if (appointmentResponse.data.success) {
-        router.push("/checkout");
       }
     }
   };
@@ -167,38 +162,8 @@ export default function Appointment() {
       <Navbar />
       <div className={styles.division}></div>
       <div className={styles.container}>
-        <h1 className={styles.title}>Agendar una Cita</h1>
+        <h1 className={styles.title}>Agendar una Cita - Checkout</h1>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label htmlFor="firstName">Nombre</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="lastName">Apellido</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={form.lastName}
-            onChange={handleChange}
-            required
-          />
-          <div style={{  position: 'absolute', left: "-9999px"  }}>
-            <label htmlFor="duration">Duration:</label>
-            <input
-              type="text"
-              id="duration"
-              name="duration"
-              value={form.duration}
-              onChange={handleChange}
-            />
-          </div>
-
           <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
@@ -209,7 +174,7 @@ export default function Appointment() {
             required
           />
 
-          <label htmlFor="phone">Teléfono (Opcional)</label>
+          <label htmlFor="phone">Teléfono </label>
           <input
             type="tel"
             id="phone"
@@ -217,15 +182,47 @@ export default function Appointment() {
             value={form.phone}
             onChange={handleChange}
           />
+
+          <label htmlFor="referenceNumber">Direccion</label>
+
+          <label htmlFor="line1">Linea 1</label>
+          <input
+            type="text"
+            id="line1"
+            name="line1"
+            value={form.line1}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="line1">Linea 2</label>
+          <input
+            type="text"
+            id="line2"
+            name="line2"
+            value={form.line2}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="city">Ciudad</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+            required
+          />
+
           <label htmlFor="service">Servicio</label>
           <select
             id="service"
             name="service"
-            value={form.service}
+            value={form.country}
             onChange={handleChange}
-            
           >
-            <option value="">Selecciona un servicio</option>
+            <option value="">Pais</option>
             {services.map((service) => (
               <option key={service.id} value={service.name}>
                 {service.name}
@@ -233,63 +230,20 @@ export default function Appointment() {
             ))}
           </select>
 
-          <label htmlFor="date">Fecha</label>
-          <div className={styles.appointmentScheduler}>
-            <div className={styles.datesContainer}>
-              {availableDates.map((date, index) => (
-                <button
-                  key={index}
-                  className={`${styles.dateButton} ${
-                    selectedDate === date ? styles.selected : ""
-                  }`}
-                  onClick={() => handleDateSelect(date, index)}
-                >
-                  {date}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <label htmlFor="time">Hora</label>
-          <div className={styles.appointmentScheduler}>
-            <div className={styles.datesContainer}>
-              {availableTimes.map((time, index) => (
-                <button
-                  key={index}
-                  className={`${styles.dateButton} ${
-                    selectedTime === time["start"] ? styles.selected : ""
-                  }`}
-                  name="time"
-                  onClick={() => handleTimeSelect(time["start"], index)}
-                >
-                  {time["start"] + " - " + time["end"]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <label htmlFor="mode">Modalidad</label>
+          <label htmlFor="state">Provincia/Estado</label>
           <select
-            id="mode"
-            name="mode"
-            value={form.mode}
+            id="state"
+            name="state"
+            value={form.state}
             onChange={handleChange}
-            required
           >
-            <option value="">Selecciona una modalidad</option>
-            <option value="virtual">Virtual</option>
-            <option value="presencial">Presencial</option>
+            <option value="">Provincia/Estado</option>
+            {services.map((service) => (
+              <option key={service.id} value={service.name}>
+                {service.name}
+              </option>
+            ))}
           </select>
-
-          <label htmlFor="referenceNumber">Número de Referencia</label>
-          <input
-            type="text"
-            id="referenceNumber"
-            name="referenceNumber"
-            value={form.referenceNumber}
-            onChange={handleChange}
-            required
-          />
 
           <button type="submit" className={styles.submitButton}>
             Agendar Cita
