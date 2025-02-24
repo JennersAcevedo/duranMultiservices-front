@@ -28,9 +28,6 @@ export default function AdminNavbar ()  {
         <li className={styles.navItem}>
           <Link href="/services">Servicios</Link>
         </li>
-        {/* <li className={styles.navItem}>
-          <Link href="/clients">Clientes</Link>
-        </li> */}
         <li className={styles.navItem}>
           <Link href="/contact">Contáctanos</Link>
         </li>
