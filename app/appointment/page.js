@@ -51,10 +51,8 @@ export default function Appointment() {
         console.log(token)
        
         if (!token) {
-          console.log('no hay token')
           router.push("/login");
         }else{
-          console.log('hay token')
         }
         let config = {
           headers: {
@@ -101,14 +99,14 @@ export default function Appointment() {
   }, []);
 
   const handleChange = (e) => {
-    console.log(date);
+
     setForm({ ...form, [e.target.name]: e.target.value });
-    console.log(date);
+
   };
   const handleDateSelect = async (date, index) => {
     if (form["duration"] === "") {
       setSelectedDate(date);
-      console.log(auxiliarDates[index]);
+ 
       let token = getCookie("authToken");
       let config = {
         headers: {
@@ -120,8 +118,7 @@ export default function Appointment() {
         `http://localhost:4000/appointment/availability/45/date/${auxiliarDates[index]}`,
         config
       );
-      console.log(new Date());
-      console.log(timesResponse);
+
       const timesData = await timesResponse.data.data.availability;
       setForm({ ...form, date: date });
       setAvailableTimes(timesData);
@@ -148,7 +145,7 @@ export default function Appointment() {
       let token = getCookie("authToken");
       let config = {
         headers: {
-          Authorization: `Bearer ${token}`, // Incluye el token como Bearer
+          Authorization: `Bearer ${token}`, 
           "Content-Type": "application/json",
         },
       };
@@ -159,6 +156,9 @@ export default function Appointment() {
       );
       console.log(appointmentResponse);
       console.log(form);
+      if (appointmentResponse.data.success) {
+        router.push("/checkout");
+      }
     }
   };
 
@@ -292,7 +292,7 @@ export default function Appointment() {
           />
 
           <button type="submit" className={styles.submitButton}>
-            Agendar Cita
+            Ir al checkout
           </button>
         </form>
       </div>
