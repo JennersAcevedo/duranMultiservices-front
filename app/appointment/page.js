@@ -292,7 +292,7 @@ export default function Appointment() {
           />
 
           <button type="submit" className={styles.submitButton}>
-            Agendar Cita
+            Ir al checkout
           </button>
         </form>
       </div>

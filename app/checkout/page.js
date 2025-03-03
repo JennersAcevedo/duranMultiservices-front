@@ -21,13 +21,24 @@ export default function Checkout() {
     zip: "",
   });
   const [services, setServices] = useState([]);
+  const [state, setState] = useState([]);
+  const [country, setCountry] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [auxiliarDates, setAuxiliarDates] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [date, setDate] = useState([]);
+  // const [selectedDate, setSelectedDate] = useState(null);
+  // const [selectedTime, setSelectedTime] = useState(null);
+  // const [date, setDate] = useState([]);
+  const countries = [
+    {
+      id: 1,
+      name: "service 1",
+      code:
+    },
+  ];
+  setCountry(countries);
   const router = useRouter();
+  const appointment_id = router.query;
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     console.log("values: ", value);
@@ -98,45 +109,47 @@ export default function Checkout() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleDateSelect = async (date, index) => {
-    if (form["duration"] === "") {
-      setSelectedDate(date);
+  // const handleDateSelect = async (date, index) => {
+  //   if (form["duration"] === "") {
+  //     setSelectedDate(date);
 
-      let token = getCookie("authToken");
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`, // Incluye el token como Bearer
-          "Content-Type": "application/json",
-        },
-      };
-      const timesResponse = await axios.get(
-        `http://localhost:4000/appointment/availability/45/date/${auxiliarDates[index]}`,
-        config
-      );
+  //     let token = getCookie("authToken");
+  //     let config = {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`, // Incluye el token como Bearer
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     const timesResponse = await axios.get(
+  //       `http://localhost:4000/appointment/availability/45/date/${auxiliarDates[index]}`,
+  //       config
+  //     );
 
-      const timesData = await timesResponse.data.data.availability;
-      setForm({ ...form, date: date });
-      setAvailableTimes(timesData);
-      console.log("Fecha seleccionada:", date);
-    } else {
-    }
-  };
-  const handleTimeSelect = async (time, index) => {
-    setSelectedTime(time);
-    setForm({ ...form, time: time });
-    console.log(time);
-  };
+  //     const timesData = await timesResponse.data.data.availability;
+  //     setForm({ ...form, date: date });
+  //     setAvailableTimes(timesData);
+  //     console.log("Fecha seleccionada:", date);
+  //   } else {
+  //   }
+  // };
+  // const handleTimeSelect = async (time, index) => {
+  //   setSelectedTime(time);
+  //   setForm({ ...form, time: time });
+  //   console.log(time);
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form["duration"] === "" || form["service"] === "") {
       let body = {
-        title: form["service"] + " - " + form["referenceNumber"],
-        start: form["time"],
-        end: form["end"],
-        date: form["date"],
-        mode: form["mode"],
-        reference: form["referenceNumber"],
-        status: 1,
+        email: form["email"],
+        phone: form["phone"],
+        line1: form["line1"],
+        line2: form["line2"],
+        city: form["city"],
+        state: form["state"],
+        country: form["country"],
+        zip: form["zip"],
+        appointment:appointment_id
       };
       let token = getCookie("authToken");
       let config = {
@@ -146,7 +159,7 @@ export default function Checkout() {
         },
       };
       let appointmentResponse = await axios.post(
-        "http://localhost:4000/appointment/add",
+        "http://localhost:4000/payment/session",
         body,
         config
       );
@@ -246,7 +259,7 @@ export default function Checkout() {
           </select>
 
           <button type="submit" className={styles.submitButton}>
-            Agendar Cita
+            Pagar con CardNet
           </button>
         </form>
       </div>
