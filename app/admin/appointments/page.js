@@ -78,6 +78,7 @@ export default function Appointments() {
     `http://localhost:4000/admin/appointments/${id}`,
         config
       );
+      await fetchData()
     } catch (error) {
       console.error("Error reaching the API");
     }

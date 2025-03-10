@@ -43,8 +43,44 @@ export default function Appointment() {
         const servicesData = [
           {
             id: 1,
-            name: "service 1",
+            name: "Preparacion de Impuestos",
           },
+          {
+            id: 2,
+            name: "Traduccion de documentos",
+          },
+          {
+            id: 3,
+            name: "Aplicacion de divorcio",
+          },
+          {
+            id: 4,
+            name: "Solicitud de ciudadania americana",
+          },
+          {
+            id: 5,
+            name: "Asesoria migratoria",
+          },
+          {
+            id: 6,
+            name: "Cartas Notarizadas",
+          },
+          {
+            id: 7,
+            name: "Preparacion de Impuestos",
+          },
+          {
+            id: 8,
+            name: "Proceso de ITIN",
+          },
+          {
+            id: 9,
+            name: "Contabilidad",
+          },
+          {
+            id: 10,
+            name: "Creacion de compañias",
+          }
         ];
         setServices(servicesData);
         let token = getCookie("authToken");
