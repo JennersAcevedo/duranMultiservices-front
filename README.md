@@ -1,4 +1,4 @@
-Next.js Project
+# Duran Multiservices Front Project
 
 This is a Next.js project bootstrapped with create-next-app.
 
