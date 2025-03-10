@@ -36,7 +36,7 @@ export default function Home() {
           <HomeServiceCard
             imageSrc={woman}
             title="Preparacion de Impuestos"
-            description="This is the descriptive text for card 1."
+            description="Te ayudamos a obtener más de tus taxes."
           />
           </Link>
           <HomeServiceCard

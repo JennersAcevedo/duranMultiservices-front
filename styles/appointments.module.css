@@ -41,7 +41,7 @@
     box-shadow: 0 4px 8px rgba(218, 175, 66, 0.5);
     transition: transform 0.3s ease;
   }
-  .card:hover {
+  .cardContainer:hover {
     transform: scale(1.05);
   }
   
